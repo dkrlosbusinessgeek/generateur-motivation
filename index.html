@@ -1,533 +1,240 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#000000" />
-  <title>Générateur de Motivation</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Générateur de Motivation</title>
 
-  <style>
-    :root{
-      --bg:#000;
-      --card:rgba(0,0,0,0.92);
-      --text:#FFD700;
-      --muted:rgba(255,215,0,0.75);
-      --border:rgba(255,215,0,0.25);
-      --shadow:0 0 20px rgba(255,215,0,0.6);
-      --btnText:#000;
-      --gradA:#FFA500;
-      --gradB:#FFD700;
-      --radius:16px;
-    }
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    body.theme-minimal{
-      --text:#fff;
-      --muted:rgba(255,255,255,0.75);
-      --border:rgba(255,255,255,0.18);
-      --shadow:0 0 18px rgba(255,255,255,0.12);
-      --btnText:#000;
-      --gradA:#fff;
-      --gradB:#bdbdbd;
-    }
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #1a1a1a, #000);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #FFD700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+.app {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100vh;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
 
-    body{
-      margin:0;
-      font-family: Arial, sans-serif;
-      background: radial-gradient(900px 600px at 50% 10%, rgba(255,215,0,0.14), transparent 60%),
-                  radial-gradient(900px 600px at 10% 90%, rgba(255,165,0,0.12), transparent 60%),
-                  var(--bg);
-      color:var(--text);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      min-height:100vh;
-      padding:max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom)) 16px;
-      text-align:center;
-    }
+.card {
+  background: rgba(0,0,0,0.85);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 0 25px rgba(255,215,0,0.25);
+  text-align: center;
+}
 
-    .app{
-      width:100%;
-      max-width:420px;
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:20px;
-      box-shadow:var(--shadow);
-      border:1px solid var(--border);
-    }
+h1 {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
 
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:14px;
-    }
+.quote {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin: 16px 0;
+}
 
-    .title{
-      margin:0;
-      font-size:20px;
-      font-weight:bold;
-    }
+button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
 
-    .settings-btn{
-      border:1px solid var(--border);
-      background:transparent;
-      color:var(--text);
-      border-radius:12px;
-      padding:10px 12px;
-      cursor:pointer;
-      font-weight:bold;
-    }
+.primary {
+  background: linear-gradient(90deg, #FFA500, #FFD700);
+  color: #000;
+}
 
-    .quote-box{
-      border:1px solid var(--border);
-      background:rgba(255,215,0,0.06);
-      border-radius:14px;
-      padding:16px;
-      min-height:120px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin-top:10px;
-    }
+.secondary {
+  background: transparent;
+  border: 2px solid #FFD700;
+  color: #FFD700;
+}
 
-    .quote{
-      margin:0;
-      font-weight:bold;
-      line-height:1.4;
-      word-break:break-word;
-    }
+.footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
 
-    .sub{
-      margin:12px 0 0 0;
-      font-size:13px;
-      color:var(--muted);
-    }
+.hidden {
+  display: none;
+}
 
-    .buttons{
-      display:grid;
-      gap:10px;
-      margin-top:14px;
-    }
+.settings {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  padding: 24px;
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+}
 
-    .btn{
-      width:100%;
-      padding:14px;
-      font-size:16px;
-      font-weight:bold;
-      border:none;
-      border-radius:12px;
-      cursor:pointer;
-      transition:0.2s;
-    }
+.settings h2 {
+  text-align: center;
+}
 
-    .btn-primary{
-      background:linear-gradient(90deg,var(--gradA),var(--gradB));
-      color:var(--btnText);
-    }
-
-    .btn-secondary{
-      background:transparent;
-      border:1px solid var(--border);
-      color:var(--text);
-      padding:12px;
-    }
-
-    .btn:active{ transform:scale(0.99); }
-
-    .footer{
-      margin-top:14px;
-      padding-top:10px;
-      border-top:1px solid rgba(255,215,0,0.2);
-      font-size:12px;
-      color:var(--muted);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .pill{
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(255,215,0,0.05);
-    }
-
-    /* Modal settings */
-    .overlay{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.65);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-      z-index:9999;
-    }
-    .overlay.show{ display:flex; }
-
-    .modal{
-      width:100%;
-      max-width:520px;
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:18px;
-      box-shadow:var(--shadow);
-      padding:16px;
-      text-align:left;
-    }
-
-    .modal h2{
-      margin:0 0 10px 0;
-      font-size:16px;
-      color:var(--text);
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns: 1fr auto;
-      align-items:center;
-      gap:10px;
-      padding:10px 0;
-      border-top:1px solid rgba(255,255,255,0.06);
-    }
-    .row:first-of-type{ border-top:none; }
-
-    .row label{
-      font-size:13px;
-      color:var(--muted);
-    }
-
-    input[type="number"], select{
-      background:transparent;
-      color:var(--text);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:8px 10px;
-      outline:none;
-      width:120px;
-    }
-
-    input[type="range"]{ width:180px; }
-
-    .modal-actions{
-      display:grid;
-      gap:10px;
-      margin-top:12px;
-    }
-
-    .tiny{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.35;
-      margin-top:6px;
-    }
-  </style>
+.settings button {
+  margin-top: auto;
+}
+</style>
 </head>
 
 <body>
-  <div class="app">
-    <div class="topbar">
-      <p class="title">💡 Motivation du jour</p>
-      <button class="settings-btn" id="openSettingsBtn">⚙️</button>
+
+<div class="app">
+
+  <div class="card">
+    <h1>💡 Motivation du jour</h1>
+    <div class="quote" id="quote">
+      Appuie sur Start pour commencer
     </div>
 
-    <div class="quote-box">
-      <p class="quote" id="quote">Appuie sur <b>Start</b> pour recevoir ta motivation.</p>
-    </div>
-
-    <p class="sub" id="limitMessage" style="display:none;">
-      💛 Limite atteinte aujourd’hui. Reviens demain !
-    </p>
-
-    <div class="buttons">
-      <button class="btn btn-primary" id="startBtn">🚀 Start</button>
-      <button class="btn btn-secondary" id="newBtn">✨ Nouvelle motivation</button>
-    </div>
-
-    <div class="footer">
-      <div class="pill" id="counter">0 / 5 aujourd’hui</div>
-      <div class="pill" id="date">—</div>
-    </div>
+    <button class="primary" id="startBtn">🚀 Start</button>
+    <button class="secondary hidden" id="nextBtn">✨ Nouvelle motivation</button>
   </div>
 
-  <!-- SETTINGS MODAL -->
-  <div class="overlay" id="overlay" role="dialog" aria-modal="true">
-    <div class="modal">
-      <h2>⚙️ Settings</h2>
-
-      <div class="row">
-        <label>Limite de motivations par jour</label>
-        <input id="limitInput" type="number" min="1" max="20" value="5">
-      </div>
-
-      <div class="row">
-        <label>Taille du texte</label>
-        <input id="fontRange" type="range" min="16" max="26" value="18">
-      </div>
-
-      <div class="row">
-        <label>Thème</label>
-        <select id="themeSelect">
-          <option value="gold">Noir & Or</option>
-          <option value="minimal">Sombre minimal</option>
-        </select>
-      </div>
-
-      <div class="row">
-        <label>Vibration (si supporté)</label>
-        <input id="vibrateToggle" type="checkbox">
-      </div>
-
-      <div class="row">
-        <label>Reset compteur (pour tests)</label>
-        <button class="btn btn-secondary" id="resetBtn" style="width:auto;padding:10px 12px;border-radius:12px;">Réinitialiser</button>
-      </div>
-
-      <div class="modal-actions">
-        <button class="btn btn-primary" id="saveBtn">💾 Enregistrer</button>
-        <button class="btn btn-secondary" id="closeBtn">Fermer</button>
-        <div class="tiny">
-          La limite est “par jour” grâce au stockage local (localStorage).  
-          Si tu vides les données de l’app, le compteur repart à zéro.
-        </div>
-      </div>
-    </div>
+  <div class="footer">
+    <span id="counter">0 / 5 aujourd’hui</span>
+    <button class="secondary" onclick="openSettings()">⚙️</button>
   </div>
 
-  <script>
-    // ---------------------------
-    // 50 phrases
-    // ---------------------------
-    const quotes = [
-      "N’abandonne jamais, même quand c’est difficile.",
-      "Chaque jour est une nouvelle chance.",
-      "Tu es plus fort que tu ne le penses.",
-      "Un petit pas aujourd’hui vaut mieux que rien.",
-      "Continue, tu es sur la bonne voie.",
-      "Le succès commence par la discipline.",
-      "Crois en toi, toujours.",
-      "Les efforts d’aujourd’hui paient demain.",
-      "Même lentement, tu avances.",
-      "Ta persévérance fera la différence.",
-      "Rien n’est impossible à celui qui essaie.",
-      "Fais de ton mieux, c’est déjà énorme.",
-      "Chaque échec t’apprend quelque chose.",
-      "Tu construis ton avenir maintenant.",
-      "Ne lâche rien, tu progresses.",
-      "Le courage, c’est d’avancer malgré la peur.",
-      "Tu peux être fier de toi.",
-      "Le changement commence par une décision.",
-      "Sois constant, pas parfait.",
-      "Ton potentiel est immense.",
-      "Travaille pour la vie que tu veux.",
-      "Chaque jour compte.",
-      "Tu es capable de grandes choses.",
-      "Avance, même quand personne ne regarde.",
-      "La motivation vient après l’action.",
-      "Fais confiance au processus.",
-      "Tu n’es pas en retard, tu es en chemin.",
-      "Tes rêves valent l’effort.",
-      "Reste concentré sur ton objectif.",
-      "Le succès est une somme de petits efforts.",
-      "Aujourd’hui est un bon jour pour commencer.",
-      "Tu apprends à chaque étape.",
-      "Ne te compare pas, avance.",
-      "Ta constance est ta force.",
-      "Même fatigué, continue.",
-      "Chaque pas te rapproche.",
-      "Ton futur te remerciera.",
-      "Sois fier du chemin parcouru.",
-      "Tu es exactement là où tu dois être.",
-      "N’arrête pas maintenant.",
-      "Respire, puis continue.",
-      "Le meilleur reste à venir.",
-      "Tu es plus résilient que tu crois.",
-      "Un jour à la fois.",
-      "Ta détermination te mènera loin.",
-      "Rien ne peut t’arrêter si tu continues.",
-      "Fais-le pour toi.",
-      "Tu avances, et c’est l’essentiel.",
-      "Continue, tu touches au but.",
-      "Ton énergie change tout."
-    ];
+</div>
 
-    // ---------------------------
-    // Keys
-    // ---------------------------
-    const STATE_KEY = "motivation_state_v3";
-    const SETTINGS_KEY = "motivation_settings_v3";
+<!-- SETTINGS -->
+<div class="settings" id="settings">
+  <h2>⚙️ Paramètres</h2>
+  <p>Limite : 5 motivations par jour</p>
+  <p>Version : 1.0</p>
+  <button class="primary" onclick="closeSettings()">⬅ Retour</button>
+</div>
 
-    const defaultSettings = {
-      limitPerDay: 5,
-      fontSize: 18,
-      theme: "gold",      // gold | minimal
-      vibrate: true
-    };
+<script>
+const quotes = [
+  "N’abandonne jamais.",
+  "Tu es plus fort que tu ne le crois.",
+  "Chaque jour est une nouvelle chance.",
+  "Travaille en silence.",
+  "Le succès viendra.",
+  "Avance même lentement.",
+  "Crois en toi.",
+  "La discipline bat la motivation.",
+  "Fais-le pour toi.",
+  "Rien n’est impossible.",
+  "Un pas à la fois.",
+  "Le progrès compte.",
+  "Tu construis ton futur.",
+  "Reste constant.",
+  "La persévérance paie.",
+  "Sois fier de toi.",
+  "Continue.",
+  "Même fatigué, avance.",
+  "Ta vision compte.",
+  "Ne lâche rien.",
+  "Le mental fait tout.",
+  "Chaque effort s’additionne.",
+  "Tu es sur le bon chemin.",
+  "Le travail paie toujours.",
+  "Aujourd’hui compte.",
+  "Le courage vient en agissant.",
+  "Rien ne t’arrête.",
+  "Reste focus.",
+  "La victoire est proche.",
+  "Tu progresses.",
+  "Encore un effort.",
+  "Fais confiance au process.",
+  "Le succès est en route.",
+  "Ta constance est ta force.",
+  "Tu es capable.",
+  "Le meilleur reste à venir.",
+  "Chaque jour est utile.",
+  "Ne doute pas.",
+  "Avance.",
+  "Garde le cap.",
+  "Tu maîtrises.",
+  "Le futur t’appartient.",
+  "L’effort forge.",
+  "Tu montes en puissance.",
+  "Rien n’est perdu.",
+  "Tu vas y arriver.",
+  "L’action change tout.",
+  "Aujourd’hui est important.",
+  "Sois discipliné.",
+  "Continue d’avancer."
+];
 
-    function todayKey() {
-      const d = new Date();
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth() + 1).padStart(2, "0");
-      const dd = String(d.getDate()).padStart(2, "0");
-      return `${yyyy}-${mm}-${dd}`;
-    }
+const today = new Date().toISOString().split("T")[0];
+const state = JSON.parse(localStorage.getItem("motivation")) || { date: today, count: 0 };
 
-    function loadSettings() {
-      try {
-        const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
-        return { ...defaultSettings, ...saved };
-      } catch {
-        return { ...defaultSettings };
-      }
-    }
+if (state.date !== today) {
+  state.date = today;
+  state.count = 0;
+}
 
-    function saveSettings(s) {
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
-    }
+const quoteEl = document.getElementById("quote");
+const counterEl = document.getElementById("counter");
+const startBtn = document.getElementById("startBtn");
+const nextBtn = document.getElementById("nextBtn");
 
-    function loadState() {
-      const today = todayKey();
-      try {
-        const saved = JSON.parse(localStorage.getItem(STATE_KEY) || "{}");
-        if (saved.date !== today) return { date: today, count: 0 };
-        return { date: today, count: Number(saved.count || 0) };
-      } catch {
-        return { date: today, count: 0 };
-      }
-    }
+function updateUI() {
+  counterEl.textContent = `${state.count} / 5 aujourd’hui`;
+}
 
-    function saveState(st) {
-      localStorage.setItem(STATE_KEY, JSON.stringify(st));
-    }
+function showMotivation() {
+  if (state.count >= 5) {
+    quoteEl.textContent = "⛔ Limite atteinte aujourd’hui. Reviens demain.";
+    return;
+  }
+  quoteEl.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+  state.count++;
+  localStorage.setItem("motivation", JSON.stringify(state));
+  updateUI();
+}
 
-    // ---------------------------
-    // UI
-    // ---------------------------
-    const quoteEl = document.getElementById("quote");
-    const limitEl = document.getElementById("limitMessage");
-    const counterEl = document.getElementById("counter");
-    const dateEl = document.getElementById("date");
-    const startBtn = document.getElementById("startBtn");
-    const newBtn = document.getElementById("newBtn");
+startBtn.onclick = () => {
+  startBtn.classList.add("hidden");
+  nextBtn.classList.remove("hidden");
+  showMotivation();
+};
 
-    // modal
-    const overlay = document.getElementById("overlay");
-    const openSettingsBtn = document.getElementById("openSettingsBtn");
-    const closeBtn = document.getElementById("closeBtn");
-    const saveBtn = document.getElementById("saveBtn");
-    const resetBtn = document.getElementById("resetBtn");
+nextBtn.onclick = showMotivation;
 
-    const limitInput = document.getElementById("limitInput");
-    const fontRange = document.getElementById("fontRange");
-    const themeSelect = document.getElementById("themeSelect");
-    const vibrateToggle = document.getElementById("vibrateToggle");
+updateUI();
 
-    function pickQuote() {
-      return quotes[Math.floor(Math.random() * quotes.length)];
-    }
+function openSettings() {
+  document.getElementById("settings").style.display = "flex";
+}
 
-    function doVibrate(settings) {
-      if (!settings.vibrate) return;
-      if (navigator.vibrate) navigator.vibrate(30);
-    }
+function closeSettings() {
+  document.getElementById("settings").style.display = "none";
+}
+</script>
 
-    function applySettings(settings) {
-      document.body.classList.toggle("theme-minimal", settings.theme === "minimal");
-      quoteEl.style.fontSize = settings.fontSize + "px";
-    }
-
-    function updateFooter(state, settings) {
-      counterEl.textContent = `${state.count} / ${settings.limitPerDay} aujourd’hui`;
-      dateEl.textContent = todayKey();
-    }
-
-    function canShowMore(state, settings) {
-      return state.count < settings.limitPerDay;
-    }
-
-    function render() {
-      const settings = loadSettings();
-      const state = loadState();
-
-      applySettings(settings);
-      updateFooter(state, settings);
-
-      if (!canShowMore(state, settings)) {
-        limitEl.style.display = "block";
-      } else {
-        limitEl.style.display = "none";
-      }
-    }
-
-    function showMotivation() {
-      const settings = loadSettings();
-      const state = loadState();
-
-      if (!canShowMore(state, settings)) {
-        quoteEl.textContent = "💛 Limite atteinte aujourd’hui. Reviens demain !";
-        render();
-        return;
-      }
-
-      quoteEl.textContent = pickQuote();
-      state.count += 1;
-      saveState(state);
-      doVibrate(settings);
-      render();
-    }
-
-    // ---------------------------
-    // Buttons
-    // ---------------------------
-    startBtn.addEventListener("click", showMotivation);
-    newBtn.addEventListener("click", showMotivation);
-
-    // Open settings
-    openSettingsBtn.addEventListener("click", () => {
-      const settings = loadSettings();
-      limitInput.value = settings.limitPerDay;
-      fontRange.value = settings.fontSize;
-      themeSelect.value = settings.theme;
-      vibrateToggle.checked = !!settings.vibrate;
-      overlay.classList.add("show");
-    });
-
-    // Close settings
-    closeBtn.addEventListener("click", () => overlay.classList.remove("show"));
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) overlay.classList.remove("show");
-    });
-
-    // Save settings
-    saveBtn.addEventListener("click", () => {
-      const newSettings = {
-        limitPerDay: Math.max(1, Math.min(20, Number(limitInput.value || 5))),
-        fontSize: Math.max(16, Math.min(26, Number(fontRange.value || 18))),
-        theme: themeSelect.value === "minimal" ? "minimal" : "gold",
-        vibrate: !!vibrateToggle.checked
-      };
-      saveSettings(newSettings);
-      overlay.classList.remove("show");
-      render();
-    });
-
-    // Reset (for tests)
-    resetBtn.addEventListener("click", () => {
-      const st = loadState();
-      st.count = 0;
-      saveState(st);
-      quoteEl.textContent = "Compteur remis à zéro ✅ Appuie sur Start.";
-      render();
-    });
-
-    // init
-    render();
-  </script>
 </body>
 </html>
+
 
