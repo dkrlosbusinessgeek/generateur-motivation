@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Motivation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: black;
+            text-align: center;
+            color: #FFD700;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #FFD700;
+        }
+        .quote {
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+        .hidden {
+            display: none;
+        }
+        button {
+            background: linear-gradient(90deg, #FFA500, #FFD700);
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            box-shadow: 0 0 10px #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💡 Motivation du Jour</h1>
+        <p class="quote">Clique sur le bouton pour voir ta motivation du jour.</p>
+        <button onclick="showQuote()">Nouvelle Motivation</button>
+        <p id="limitMessage" class="hidden">Pour aujourd'hui c'est fini ! Reviens demain pour plus de motivation.</p>
+    </div>
+
+    <script>
+        const quotes = [
+            "N'abandonne jamais, chaque effort compte.",
+            "Tu es plus fort que tu ne le crois.",
+            "Les échecs sont des leçons déguisées.",
+            "Chaque jour est une nouvelle opportunité.",
+            "Travaille en silence, le succès fera du bruit.",
+            "Rien n'est impossible pour un cœur courageux.",
+            "Le seul endroit où le succès précède le travail, c'est dans le dictionnaire.",
+            "Crois en toi et tout deviendra possible.",
+            "Ta seule limite, c'est toi-même.",
+            "Le meilleur moyen de prédire l'avenir, c'est de le créer.",
+            "Le succès est la somme de petits efforts répétés jour après jour.",
+            "Un voyage de mille lieues commence toujours par un premier pas.",
+            "Ne rêve pas ta vie, vis tes rêves.",
+            "Fais de ta vie un rêve, et d'un rêve, une réalité.",
+            "L'échec est simplement l'opportunité de recommencer, cette fois plus intelligemment.",
+            "L'action est la clé fondamentale de tout succès.",
+            "Si vous pouvez le rêver, vous pouvez le faire.",
+            "Le courage n’est pas l’absence de peur, mais la capacité de la vaincre.",
+            "Fais ce que tu peux, avec ce que tu as, là où tu es.",
+            "Ce que l'esprit peut concevoir et croire, il peut le réaliser."
+        ];
+
+        for (let i = 0; i < 230; i++) {
+            quotes.push(`Motivation n°${i + 21}: Continue d'avancer, ne lâche rien !`);
+        }
+        
+        // S'assurer que la liste contient bien 250 phrases
+        while (quotes.length < 250) {
+            quotes.push(`Phrase bonus n°${quotes.length + 1}: Garde la motivation haute !`);
+        }
+
+        let count = 0;
+
+        function showQuote() {
+            if (count < 5) {
+                document.querySelector('.quote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+                count++;
+            } else {
+                document.querySelector('.quote').classList.add('hidden');
+                document.getElementById('limitMessage').classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
