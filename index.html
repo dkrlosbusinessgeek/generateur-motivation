@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Générateur de Motivation</title>
 
 <style>
@@ -12,46 +12,56 @@
   padding: 0;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
-  min-height: 100vh;
-  background: radial-gradient(circle at top, #1a1a1a, #000);
+  background: linear-gradient(180deg, #1b1b1b, #000000);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color: #FFD700;
+}
+
+/* APP CONTAINER */
+.app {
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
-.app {
+/* CARD */
+.card {
   width: 100%;
-  max-width: 420px;
-  min-height: 100vh;
-  padding: 24px;
+  max-width: 380px;
+  background: #111;
+  border-radius: 20px;
+  padding: 28px 22px;
+  box-shadow: 0 0 30px rgba(255,215,0,0.25);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-}
-
-.card {
-  background: rgba(0,0,0,0.85);
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 0 25px rgba(255,215,0,0.25);
+  align-items: center;
   text-align: center;
+  gap: 18px;
 }
 
+/* TITRE */
 h1 {
   font-size: 1.4rem;
-  margin-bottom: 12px;
 }
 
+/* TEXTE MOTIVATION */
 .quote {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   line-height: 1.5;
-  margin: 16px 0;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* BOUTONS */
 button {
   width: 100%;
   padding: 14px;
@@ -73,33 +83,27 @@ button {
   color: #FFD700;
 }
 
+/* FOOTER */
 .footer {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   font-size: 0.85rem;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
-.hidden {
-  display: none;
-}
-
+/* SETTINGS */
 .settings {
   position: fixed;
   inset: 0;
   background: #000;
-  padding: 24px;
   display: none;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 20px;
-}
-
-.settings h2 {
+  padding: 24px;
   text-align: center;
-}
-
-.settings button {
-  margin-top: auto;
 }
 </style>
 </head>
@@ -107,22 +111,25 @@ button {
 <body>
 
 <div class="app">
-
   <div class="card">
+
     <h1>💡 Motivation du jour</h1>
+
     <div class="quote" id="quote">
-      Appuie sur Start pour commencer
+      Appuie sur Start
     </div>
 
     <button class="primary" id="startBtn">🚀 Start</button>
-    <button class="secondary hidden" id="nextBtn">✨ Nouvelle motivation</button>
-  </div>
+    <button class="secondary" id="nextBtn" style="display:none;">
+      ✨ Nouvelle motivation
+    </button>
 
-  <div class="footer">
-    <span id="counter">0 / 5 aujourd’hui</span>
-    <button class="secondary" onclick="openSettings()">⚙️</button>
-  </div>
+    <div class="footer">
+      <span id="counter">0 / 5 aujourd’hui</span>
+      <button class="secondary" onclick="openSettings()">⚙️</button>
+    </div>
 
+  </div>
 </div>
 
 <!-- SETTINGS -->
@@ -137,62 +144,31 @@ button {
 const quotes = [
   "N’abandonne jamais.",
   "Tu es plus fort que tu ne le crois.",
-  "Chaque jour est une nouvelle chance.",
-  "Travaille en silence.",
-  "Le succès viendra.",
-  "Avance même lentement.",
-  "Crois en toi.",
+  "Chaque jour compte.",
   "La discipline bat la motivation.",
-  "Fais-le pour toi.",
-  "Rien n’est impossible.",
   "Un pas à la fois.",
-  "Le progrès compte.",
-  "Tu construis ton futur.",
   "Reste constant.",
-  "La persévérance paie.",
+  "Le progrès est réel.",
+  "Fais-le pour toi.",
+  "Continue d’avancer.",
+  "Le succès arrive.",
   "Sois fier de toi.",
-  "Continue.",
-  "Même fatigué, avance.",
-  "Ta vision compte.",
-  "Ne lâche rien.",
-  "Le mental fait tout.",
-  "Chaque effort s’additionne.",
-  "Tu es sur le bon chemin.",
-  "Le travail paie toujours.",
-  "Aujourd’hui compte.",
-  "Le courage vient en agissant.",
-  "Rien ne t’arrête.",
-  "Reste focus.",
-  "La victoire est proche.",
-  "Tu progresses.",
-  "Encore un effort.",
-  "Fais confiance au process.",
-  "Le succès est en route.",
+  "Même lentement, avance.",
   "Ta constance est ta force.",
-  "Tu es capable.",
-  "Le meilleur reste à venir.",
-  "Chaque jour est utile.",
-  "Ne doute pas.",
-  "Avance.",
-  "Garde le cap.",
-  "Tu maîtrises.",
-  "Le futur t’appartient.",
-  "L’effort forge.",
-  "Tu montes en puissance.",
-  "Rien n’est perdu.",
-  "Tu vas y arriver.",
-  "L’action change tout.",
+  "Le mental fait la différence.",
   "Aujourd’hui est important.",
-  "Sois discipliné.",
-  "Continue d’avancer."
+  "Ne doute pas.",
+  "Tu construis ton futur.",
+  "Encore un effort.",
+  "Rien ne t’arrête.",
+  "Le meilleur arrive."
 ];
 
 const today = new Date().toISOString().split("T")[0];
-const state = JSON.parse(localStorage.getItem("motivation")) || { date: today, count: 0 };
+let state = JSON.parse(localStorage.getItem("motivation")) || { date: today, count: 0 };
 
 if (state.date !== today) {
-  state.date = today;
-  state.count = 0;
+  state = { date: today, count: 0 };
 }
 
 const quoteEl = document.getElementById("quote");
@@ -206,7 +182,7 @@ function updateUI() {
 
 function showMotivation() {
   if (state.count >= 5) {
-    quoteEl.textContent = "⛔ Limite atteinte aujourd’hui. Reviens demain.";
+    quoteEl.textContent = "⛔ Limite atteinte. Reviens demain.";
     return;
   }
   quoteEl.textContent = quotes[Math.floor(Math.random() * quotes.length)];
@@ -216,8 +192,8 @@ function showMotivation() {
 }
 
 startBtn.onclick = () => {
-  startBtn.classList.add("hidden");
-  nextBtn.classList.remove("hidden");
+  startBtn.style.display = "none";
+  nextBtn.style.display = "block";
   showMotivation();
 };
 
